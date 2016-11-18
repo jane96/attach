@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<link rel="stylesheet" href="/assets/plugins/attech-form-design/css/base.css">
+		<style type="text/css" >
+			fieldset{ padding: 20px; font-family: 'Microsoft Yahei';}
+			.control-group{ margin-bottom: 10px; }
+			.xcr {color: #E26F50;}
+			#sign_color_btn{ display: block; width: 38px; height: 38px; border-radius: 4px; border: 1px solid #DADFE6; }
+		</style>
+		<script src="/static/fancyBox/lib/jquery-1.10.1.min.js"></script>
+	</head>
+	<body>
+		<fieldset>
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label for="sign_title"><var id="lang_title"></var> <span class="xcr">*</span></label>
+					<div>
+						<input type="text" id="sign_title">
+					</div>
+				</div>
+				<!-- <div class="control-group">
+					<label><var id="lang_type"></var></label>
+					<div>
+						<label class="checkbox checkbox-inline"><input type="checkbox" id="sign_type_stamp" checked name="type"><var id="lang_stamp"></var></label>
+						<label class="checkbox checkbox-inline"><input type="checkbox" id="sign_type_write" checked name="type"><var id="lang_write"></var></label>
+					</div>
+				</div> -->
+				<div class="control-group">
+					<label for="sign_color"><var id="lang_color"></var></label>
+					<a href="javascript:;" id="sign_color_btn"></a>
+					<input type="hidden" id="sign_color">
+				</div>
+				<div>
+					<label><var id="lang_lock_tag"></var></label>
+					<div>
+						<textarea name="" id="sign_field" rows="5"></textarea>
+					</div>
+				</div>
+			</form>
+		</fieldset>
+		<script src="/assets/plugins/attech-form-design/js/src/core.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/base.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/common.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/Math.uuid.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/dialogs/fc.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/dialogs/internal_controls.js"></script>
+		<script>
+			var G = parent.G;
+			(function() {
+				var tpl = '<ic data-id="<%=id%>" data-type="sign" data-title="<%=title%>" data-sign-color="<%=signColor%>" data-sign-type="<%=signType%>" data-sign-field="<%=signField%>" contenteditable="false">'
+				    + '<textarea name="data_<%=id%>" title="<%=title%>" rows="5"></textarea></ic>',
+					fc = new Fc(editor, tpl),
+					editing = UE.plugins['formcontrols'].editing,
+					oldData;
+
+				// 取色器
+				
+				var signColorPicker = (function(){
+					var $btn = $("#sign_color_btn"),
+						$input = $btn.next(),
+						set = function(hex){
+							$input.val(hex);
+							$btn.css("background-color", hex);
+						},
+						get = function(){
+							return $input.val();
+						}
+
+					$btn.colorPicker({ onPick: set });
+
+					return { set: set, get: get};
+				})();
+				
+
+				if (editing) {
+					oldData = fc.getControlData(editing);
+					$G('sign_title').value = oldData.title;
+					signColorPicker.set(oldData.signColor);
+					// 
+					/* $G('sign_type_stamp').checked = oldData.signType.charAt(0) == "1";	
+					$G('sign_type_write').checked = oldData.signType.charAt(2) == "1"; */
+
+					$G('sign_field').value = fcUtil.splitVal(oldData.signField);
+				}
+
+				dialog.onok = function() {
+					var data, title = $G('sign_title').value,formdata;
+					var stamp, write;
+					if ($.trim(title) === "") {
+						alert(editor.getLang("fc.noNameTip"));
+						return false;
+					}
+
+					//stamp = $G('sign_type_stamp').checked;
+					//write = $G('sign_type_write').checked;
+
+					/* if(!stamp && !write){
+						alert(editor.getLang("icsign.select_sign_type"));
+						return false;
+					} */
+
+					data = {
+						title: title,
+						//stamp: stamp,
+						//write: write,
+						signType: +stamp + "," + +write,
+						signColor: signColorPicker.get(),
+						signField: fcUtil.joinVal($G('sign_field').value)
+					};
+					formdata = {
+						id: G.formid,
+						propName: title,
+						propType: "sign"
+					};
+					// 标签名不能为空且不能重复，提示或自动改名
+					// 编辑
+					if (editing) {
+						formdata.propKey = oldData.id;
+						data.id = formdata.propKey;
+                        $.ajax({
+                            type: "post",
+                            url: "/a/form/template/propupdate",
+                            data: formdata,
+                            dataType: "json",
+                            success: function(response){
+                            	if(response.status == "success"){
+                            		fc.updateContorl(editing, data);
+                            		delete UE.plugins['formcontrols'].editing
+                                	dialog.close();
+                            	}else{
+                            		alert("系统错误，保存失败");
+                            	}
+                            },
+                            error: function(){
+                            	alert("请检查网络，保存失败");
+                            }
+                        });
+					} else {
+						formdata.propKey = Math.uuid(32);
+						data.id = formdata.propKey;
+						$.ajax({
+							type : "post",
+							url : "/a/form/template/propsave",
+							data : formdata,
+							dataType : "json",
+							success : function(response) {
+								if (response.status == "success") {
+									fc.addControl(data);
+									dialog.close();
+								} else {
+									alert("系统错误，保存失败");
+								}
+							},
+							error : function() {
+								alert("请检查网络，保存失败");
+							}
+						});
+					}
+					return false;
+				};
+			})();
+		</script>
+	</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<link rel="stylesheet" href="/assets/plugins/attech-form-design/css/base.css">
+		<link rel="stylesheet" href="/assets/plugins/attech-form-design/js/lib/ueditor/third-party/codemirror/codemirror.css">
+		<style type="text/css" >
+			fieldset{ padding: 20px; font-family: 'Microsoft Yahei';}
+			.code-wrap{ border: 1px solid #EEE; }
+		</style>
+		<script src="/static/fancyBox/lib/jquery-1.10.1.min.js"></script>
+	</head>
+	<body>
+		<fieldset>
+			<label for="js_code"><var id="lang_code_edit"></var></label>
+			<div class="code-wrap" id="js_code"></div>
+		</fieldset>
+
+		<script src="/assets/plugins/attech-form-design/js/src/core.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/base.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/common.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/Math.uuid.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/third-party/codemirror/codemirror.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/dialogs/internal_controls.js"></script>
+		<script>
+			var G = parent.G;
+			(function() {
+				var cm = CodeMirror($G('js_code'), {
+					value: $G('js_code').value,
+					mode: "javascript",
+					lineNumbers: true,
+					lineWrapping: true
+				}
+				);
+				var loadCode = function() {
+					// @Debug
+					//cm.setValue(localStorage.getItem("jscode") || "");
+					//cm.focus();
+					 $.ajax({
+						type: 'get',
+						dataType: 'json',
+						url: '/a/form/template/getformjc/' +　editor.formid　+　'/js',
+						success: function(data){
+							if("success" == data.status){
+								cm.setValue(data.content);
+				 				cm.focus();
+							}else{
+								alert("加载失败，请重新打开！");
+							}
+						},
+						error: function(){
+							alert('请求失败，请检查网络');
+						}
+					 });
+				};
+
+				var submitCode = function() {
+					var subData = {};
+					subData.content = cm.getValue();
+					$.ajax({
+						type: 'post',
+						dataType: 'json',
+						data: subData,
+						url: '/a/form/template/saveformjc/' + editor.formid + '/js',
+						success: function(data){
+							if("success" == data.status){
+								dialog.close();
+							}else{
+								alert("保存失败，请重新保存！");
+							}
+						},
+						error: function(){
+							alert('请求失败，请检查网络');
+						}
+					 });
+					//var val = cm.getValue(),url = Attech.app.url('workflow/api/setText',{formid:editor.formid,field:'script',content:val});
+					 /* ajax.request(url, {timeout:60000,onsuccess:function (xhr) {
+					 		try {
+					 			if( xhr.responseText > 0 ){
+					 				alert('保存成功');
+					 				return true;
+					 			}
+					 		} catch (e) {
+					 			alert('save error,please contact OA administrator');
+					 			return false;
+					 		}
+					 	},
+					 	error:function () {
+					 		alert('Request TimeOut');
+					 	}
+					 }); */
+					// @Debug:
+					//localStorage.setItem("jscode", cm.getValue());
+				};
+
+				dialog.onok = function() {
+					
+					submitCode();
+					return false;
+				};
+				loadCode();
+			})();
+
+		</script>
+	</body>
+</html>

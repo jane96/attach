@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<link rel="stylesheet" href="/assets/plugins/attech-form-design/css/base.css">
+		<link rel="stylesheet" href="/assets/plugins/attech-form-design/js/lib/ueditor/third-party/codemirror/codemirror.css">
+		<style type="text/css" >
+			fieldset{ padding: 20px; font-family: 'Microsoft Yahei';}
+			.code-wrap{ border: 1px solid #EEE; }
+		</style>
+		<script src="/static/fancyBox/lib/jquery-1.10.1.min.js"></script>
+	</head>
+	<body>
+		<fieldset>
+			<label for="css_code"><var id="lang_code_edit"></var></label>
+			<div class="code-wrap" id="css_code"></div>
+		</fieldset>
+		<script src="/assets/plugins/attech-form-design/js/src/core.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/base.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/common.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/Math.uuid.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/third-party/codemirror/codemirror.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/dialogs/internal_controls.js"></script>
+		<script>
+			var G = parent.G;
+			(function() {
+				var cm = CodeMirror($G('css_code'), {
+					value: $G('css_code').value,
+					mode: "css",
+					lineNumbers: true,
+					lineWrapping: true
+				}
+				);
+
+				var loadCode = function() {
+					$.ajax({
+						type: 'get',
+						dataType: 'json',
+						url: '/a/form/template/getformjc/' +　editor.formid　+　'/css',
+						success: function(data){
+							if("success" == data.status){
+								cm.setValue(data.content);
+				 				cm.focus();
+							}else{
+								alert("加载失败，请重新打开！");
+							}
+						},
+						error: function(){
+							alert('请求失败，请检查网络');
+						}
+					 });
+				};
+
+				var submitCode = function() {
+					var subData = {};
+					subData.content = cm.getValue();
+					$.ajax({
+						type: 'post',
+						dataType: 'json',
+						data: subData,
+						url: '/a/form/template/saveformjc/' + editor.formid + '/css',
+						success: function(data){
+							if("success" == data.status){
+								dialog.close();
+							}else{
+								alert("保存失败，请重新保存！");
+							}
+						},
+						error: function(){
+							alert('请求失败，请检查网络');
+						}
+					 });
+					// @Debug:
+					//localStorage.setItem("csscode", cm.getValue());
+				};
+				dialog.onok = function() {
+					submitCode();
+					return false;
+				};
+				loadCode();
+			})();
+
+		</script>
+	</body>
+</html>

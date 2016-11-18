@@ -1,0 +1,4 @@
+insert into sys_menu(ID,PARENT_ID,PARENT_IDS,NAME,HREF,TARGET,SORT,IS_SHOW,IS_MOBILE,PERMISSION,CREATE_BY,CREATE_DATE,UPDATE_BY,UPDATE_DATE,PLUGINS,DEL_FLAG,REMARKS) 
+values('${uid}','3','0,1,2,3','${functionName}管理','pages/${moduleName}/${className}Form.html','/${className}Form/:${className}Id?',9,0,0,'${permissionPrefix}:edit',1,sysdate,1,sysdate,'loadSequence(''ngFileUpload'',''paramService'')',0,'自动生成的菜单');
+insert into sys_menu(ID,PARENT_ID,PARENT_IDS,NAME,HREF,TARGET,SORT,IS_SHOW,IS_MOBILE,PERMISSION,CREATE_BY,CREATE_DATE,UPDATE_BY,UPDATE_DATE,PLUGINS,DEL_FLAG,REMARKS) 
+values('${uid1}','3','0,1,2,3','${functionName}列表','pages/${moduleName}/${className}List.html','/${className}List',9,1,0,'${permissionPrefix}:view',1,sysdate,1,sysdate,'loadSequence(''ngTable'',''paramService'')',0,'自动生成的菜单');

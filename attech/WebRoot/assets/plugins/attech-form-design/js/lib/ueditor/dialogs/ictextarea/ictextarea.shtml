@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<link rel="stylesheet" href="/assets/plugins/attech-form-design/css/base.css">
+		<style type="text/css" >
+			fieldset{ padding: 20px; font-family: 'Microsoft Yahei';}
+			.control-group{ margin-bottom: 10px; }
+			.span6 { width: 50%; float: left; }
+			.xcr { color: #E26F50; }
+		</style>
+		<script src="/static/fancyBox/lib/jquery-1.10.1.min.js"></script>
+	</head>
+	<body>
+		<fieldset>
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label for="control_textarea_title"><var id="lang_control_title"></var> <span class="xcr">*</span></label>
+					<input type="text" id="control_textarea_title">
+				</div>
+				<div class="control-group">
+					<label for="control_textarea_width"><var id="lang_control_style"></var></label>
+					<div class="row">
+						<div class="span6">
+							<div class="input-group">
+								<input type="text" id="control_textarea_width">
+								<span class="input-group-addon"><var id="lang_control_width"></var></span>
+							</div>
+						</div>
+						<div class="span6">
+							<div class="input-group">
+								<input type="text" id="control_textarea_rows">
+								<span class="input-group-addon"><var id="lang_control_row"></var></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="control_textarea_value"><var id="lang_control_value"></var></label>
+					<textarea id="control_textarea_value" rows="5"></textarea>
+				</div>
+				<div class="control-group">
+					<label for="control_custom_value"><var id="lang_custom_value"></var></label>
+					<input type="text" id="control_custom_value">
+				</div>
+				<!-- <div class="control-group">
+					<label for="control_textarea_editor" class="checkbox">
+						<input type="checkbox" id="control_textarea_editor">
+						<var id="lang_enable_editor"></var>
+					</label>
+				</div> -->
+			</form>
+		</fieldset>
+		<script src="/assets/plugins/attech-form-design/js/src/core.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/base.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/common.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/Math.uuid.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/dialogs/fc.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/dialogs/internal_controls.js"></script>
+		<script>
+			var G = parent.G;
+			(function() {
+				var tpl = '<ic data-id="<%=id%>" data-type="textarea" data-custom="<%=custom%>" data-title="<%=title%>" data-value="<%=value%>" data-width="<%=width%>" data-rows="<%=rows%>" contenteditable="false" >' +
+						'<textarea name="data_<%=id%>" title="<%=title%>" rows="<%=rows%>" style="width:<%=widths%>" disabled="true"><%=value%></textarea></ic>',
+						fc = new Fc(editor, tpl),
+						editing = UE.plugins['formcontrols'].editing,
+						oldData,propEnumKey;
+				// 编辑时， 需要还原各控件的值
+				if (editing) {
+					oldData = fc.getControlData(editing);
+					$G('control_textarea_title').value = oldData.title;
+					$G('control_custom_value').value = oldData.custom || "";
+					$G('control_textarea_value').value = oldData.value || "";
+					$G('control_textarea_width').value = oldData.width;
+					$G('control_textarea_rows').value = oldData.rows;
+					//$G('control_textarea_editor').checked = oldData.rich == "1" ? true : false;
+				}
+				if(undefined != UE.plugins['formcontrols'].propEnumId){
+					propEnumKey = UE.plugins['formcontrols'].propEnumId;
+					delete UE.plugins['formcontrols'].propEnumId
+				}else{
+					propEnumKey = "";
+				}
+				dialog.onok = function() {
+					var data,title = $G('control_textarea_title').value,formdata,widthlen,widthls;
+					if ($.trim(title) === "") {
+						alert(editor.getLang("fc.noNameTip"));
+						return false;
+					}
+					if("100%" != $G('control_textarea_width').value){
+						widthlen = Number($G('control_textarea_width').value) || "200";
+						widthls = widthlen + "px";
+					}else{
+						widthlen = "100%";
+						widthls = "100%";
+					}
+					data = {
+						title: title,
+						value: $G('control_textarea_value').value,
+						width: widthlen,
+						widths: widthls,
+						custom: $G('control_custom_value').value,
+						rows: Number($G('control_textarea_rows').value) || 5
+						//rich: $G('control_textarea_editor').checked ? 1 : 0
+					};
+					formdata = {
+						id: G.formid,
+						propName: title,
+						propType: "textarea",
+						propEnumId: propEnumKey
+					};
+					// 编辑
+					if (editing) {
+						formdata.propKey = oldData.id;
+						data.id = formdata.propKey;
+                        $.ajax({
+                            type: "post",
+                            url: "/a/form/template/propupdate",
+                            data: formdata,
+                            dataType: "json",
+                            success: function(response){
+                            	if(response.status == "success"){
+                            		fc.updateContorl(editing, data);
+                            		delete UE.plugins['formcontrols'].editing
+                                	dialog.close();
+                            	}else{
+                            		alert("系统错误，保存失败");
+                            	}
+                            },
+                            error: function(){
+                            	alert("请检查网络，保存失败");
+                            }
+                        });
+					} else {
+						formdata.propKey = Math.uuid(32);
+						data.id = formdata.propKey;
+						$.ajax({
+							type : "post",
+							url : "/a/form/template/propsave",
+							data : formdata,
+							dataType : "json",
+							success : function(response) {
+								if (response.status == "success") {
+									if(undefined != response.propenumId){
+                            			$("#" + response.propenumId, window.parent.document).remove();
+                            		}
+									fc.addControl(data);
+									dialog.close();
+								} else {
+									alert("系统错误，保存失败");
+								}
+							},
+							error : function() {
+								alert("请检查网络，保存失败");
+							}
+						});
+					}
+					return false;
+				};
+			})();
+		</script>
+	</body>
+</html>

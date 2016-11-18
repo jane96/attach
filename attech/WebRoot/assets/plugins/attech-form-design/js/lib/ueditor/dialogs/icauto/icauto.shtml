@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<link rel="stylesheet" href="/assets/plugins/attech-form-design/css/base.css">
+		<style type="text/css" >
+			fieldset{ padding: 20px; font-family: 'Microsoft Yahei';}
+			.control-group{ margin-bottom: 10px; }
+			.xcr { color: #E26F50; }
+			#ins_close { position: fixed; top: 10px; right: 20px; }
+			#control_src_ins p{ font-size: 12px; margin: 10px 0; }
+		</style>
+		<script src="/static/fancyBox/lib/jquery-1.10.1.min.js"></script>
+	</head>
+	<body>
+		<fieldset>
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label for="control_auto_title"><var id="lang_control_title"></var> <span class="xcr">*</span></label>
+					<input type="text" id="control_auto_title">
+				</div>
+				<div class="control-group">
+					<label for="control_custom_value"><var id="lang_custom_value"></var></label>
+					<input type="text" id="control_custom_value">
+				</div>
+				<div class="control-group">
+					<label for="control_auto_field"><var id="lang_auto_field"></var>:</label>
+					<select id="control_auto_field">
+						<optgroup id="auto_field_input">
+							<option value="sys_date"></option>
+							<option value="sys_date_long"></option>
+							<option value="sys_date_short"></option>
+							<option value="sys_date_year"></option>
+							<option value="user"></option>
+							<option value="user_dept"></option>
+							<option value="user_company"></option>
+							<option value="sys_sql"></option>
+						</optgroup>
+						<optgroup id="auto_field_select">
+							<option value="sys_list_sql"></option>
+						</optgroup>
+						<!-- <optgroup id="auto_field_listview">
+							<option value="sys_listview_sql"></option>
+						</optgroup> -->
+					</select>
+				</div>
+				
+				<!-- <div class="control-group">
+					<label for="control_auto_type"><var id="lang_control_type"></var> <span class="xcr">*</span></label>
+					<input type="text" id="control_auto_type">
+				</div> -->
+				<div>
+					<div id="normal_field">
+						<div class="control-group">
+							<label for="control_auto_width"><var id="lang_control_style"></var></label>
+							<div class="input-group">
+								<input type="text" id="control_auto_width">
+								<span class="input-group-addon"><var id="lang_control_width"></var></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<div>
+								<label for="control_auto_hide" class="checkbox">
+									<input type="checkbox" id="control_auto_hide">
+									<var id="lang_control_hide"></var>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div id="src_field" style="display: none;">
+						<div class="control-group">
+							<span class="pull-right">
+								<a href="javascript:;" id="ins_open">说明</a>
+								<a href="javascript:;" id="src_test">测试</a>
+							</span>
+							<label for="control_auto_src">SQL查询语句 ('号用`号替换)</label>
+							<div class="input-group">
+								<textarea rows="5" id="control_auto_src"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div id="control_src_ins" style="display: none;">
+				<button type="button" title="回到控件属性页" class="btn btn-small" id="ins_close"> <i class="glyphicon-home"></i></button>
+				<div>
+					<div class="alert alert-error">
+						<a class="close" data-dismiss="alert">×</a> <strong>注意！</strong>
+						SQL语句中的单引号请用符号`替换（该符号在键盘TAB上方）。
+					</div>
+					<blockquote>
+						<p>
+							宏控件可以代替手工输入，实现根据用户指定要求进行自动取值，使得工作流的表单填写更加智能与方便，宏控件类型选择当前日期，点击【确定】，在表单上
+							就生成了该控件，填写表单时就会自动填入当前日期了。另外宏控件也支持隐藏属性，对不需要在表单显示字段可以将其隐藏。宏控件支持来自SQL查询，语句，下面重点介绍一下。
+						</p>
+					</blockquote>
+					<p>
+						来自SQL语句的宏控件，因其定义格式比较复杂，需要具备SQL语言的专业知识，并了解OA系统数据库结构，建议在技术支持人员指导下完成。
+					</p>			
+					<p>可以参照以下格式书写SQL语句：</p>
+					<strong>下拉菜单型语句如：</strong>		
+					<p><code>SELECT name FROM user ORDER BY sort</code></p>
+					<p>该语句表示列出全部用户的姓名，并按序号排序显示</p>
+					<strong>单行输入框语句如：</strong>
+					<p><code>SELECT realname FROM user WHERE username = `tp`</code></p>
+					<p>该语句表示查询用户名tp的用户的真实姓名</p>
+					<strong>目前，SQL语句中已支持以下宏变量，更加方便用户使用：</strong>
+					<p>
+						<code>[sys_user_id]</code>
+						表示当前用户的用户ID
+					</p>
+					<p>
+						<code>[sys_dept_id]</code>
+						表示当前用户的部门ID
+					</p>		
+					<p>
+						<code>[sys_com_id]</code>
+						表示当前用户公司ID
+					</p>
+					例如：
+					<p><code>SELECT realname FROM user WHERE uid=`[sys_user_id]`</code></p>
+					<p>此句表示查询当前用户的真实姓名</p>
+
+					<p><code>SELECT realname FROM user WHERE deptid=`[sys_dept_id]`)</code></p>
+					<p>此句表示查询当前部门所有用户的姓名</p>
+					<p><code>SELECT realname FROM user WHERE deptid = `[sys_com_id]` ORDER BY uid</code></p>
+
+					<p>此句表示查询当前公司下所有用户的姓名，并按角色序号排序</p>
+				</div>
+			</div>
+		</fieldset>
+		<script src="/assets/plugins/attech-form-design/js/src/core.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/base.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/common.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/src/Math.uuid.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/dialogs/fc.js"></script>
+		<script src="/assets/plugins/attech-form-design/js/lib/ueditor/dialogs/internal_controls.js"></script>
+		<script>
+			var G = parent.G;
+			(function() {
+				var srcMode = ["sys_sql", "sys_list_sql", "sys_listview_sql"],
+						// 获取可选字段数据，因为选择sql相关field时，传递及还原数据的操作会有所区别
+						// 所以getFieldData, setFieldData 用于处理差异
+					getFieldData = function(field) {
+						data = {};
+						if (UE.utils.indexOf(srcMode, field) !== -1) {
+							data.src = $G('control_auto_src').value;
+						} else {
+							var widthlen;
+							if("100%" != $G('control_auto_width').value){
+								widthlen = Number($G('control_auto_width').value) || 200;
+							}else{
+								widthlen = "100%";
+							}
+							data.width = widthlen;
+							data.hide = $G('control_auto_hide').checked ? 1 : 0;
+						}
+						return data;
+					},
+					setFieldData = function(field, data) {
+						if (UE.utils.indexOf(srcMode, field) !== -1) {
+							$G('control_auto_src').value = data.src;
+						} else {
+							$G('control_auto_width').value = data.width;
+							$G('control_auto_hide').checked = data.hide == "1" ? true : false;
+						}
+					},
+					showModeByField = function(field) {
+					var isSrcMode = UE.utils.indexOf(srcMode, field) !== -1;
+					$G('src_field').style.display = isSrcMode ? "block" : "none";
+					$G('normal_field').style.display = isSrcMode ? "none" : "block";
+				};
+
+				var tpl = '<ic data-id="<%=id%>" data-type="auto" data-custom="<%=custom%>" data-title="<%=title%>" data-src="<%=src%>" data-field="<%=field%>" data-width="<%=width%>" data-hide="<%=hide%>" contenteditable="false" >' +
+						'<span class="fake-auto" style="width: <%=width%>px" title="<%=title%>">(宏)<%=name%></span></ic>',
+						fc = new Fc(editor, tpl),
+						editing = UE.plugins['formcontrols'].editing,
+						oldData,propEnumKey;
+
+				if(undefined != UE.plugins['formcontrols'].propEnumId){
+					propEnumKey = UE.plugins['formcontrols'].propEnumId;
+					delete UE.plugins['formcontrols'].propEnumId
+				}else{
+					propEnumKey = "";
+				}
+				// 编辑时， 需要还原各控件的值
+				if (editing) {
+					oldData = fc.getControlData(editing);
+					$G('control_auto_title').value = oldData.title;
+					$G('control_custom_value').value = oldData.custom || "";
+					$G('control_auto_field').value = oldData.field;
+					setFieldData(oldData.field, oldData);
+				}
+
+				dialog.onok = function() {
+					var title = $G('control_auto_title').value, data, mode, field, name,formdata;
+					if ($.trim(title) === "") {
+						alert(editor.getLang("fc.noNameTip"));
+						return false;
+					}
+
+					field = $G('control_auto_field').value;
+					name = $G('control_auto_field').options[$G('control_auto_field').selectedIndex].innerHTML; // innerText||textContent
+					data = UE.utils.extend({
+						title: title,
+						field: field,
+						custom: $G('control_custom_value').value,
+						width: "",
+						hide: "",
+						src: "",
+						name: name
+					}, getFieldData(field));
+					
+			        formdata = {
+						id : G.formid,
+						propName : title,
+						propType : "auto",
+						propEnumId: propEnumKey
+					};
+					// 编辑
+					if (editing) {
+						formdata.propKey = oldData.id;
+						data.id = formdata.propKey;
+						$.ajax({
+							type : "post",
+							url : "/a/form/template/propupdate",
+							data : formdata,
+							dataType : "json",
+							success : function(response) {
+								if (response.status == "success") {
+									fc.updateContorl(editing, data);
+									delete UE.plugins['formcontrols'].editing
+									dialog.close();
+								} else {
+									alert("系统错误，保存失败");
+								}
+							},
+							error : function() {
+								alert("请检查网络，保存失败");
+							}
+						});
+					} else {
+						formdata.propKey = Math.uuid(32);
+						data.id = formdata.propKey;
+						$.ajax({
+							type : "post",
+							url : "/a/form/template/propsave",
+							data : formdata,
+							dataType : "json",
+							success : function(response) {
+								if (response.status == "success") {
+									if(undefined != response.propenumId){
+                            			$("#" + response.propenumId, window.parent.document).remove();
+                            		}
+									fc.addControl(data);
+									dialog.close();
+								} else {
+									alert("系统错误，保存失败");
+								}
+							},
+							error : function() {
+								alert("请检查网络，保存失败");
+							}
+						});
+					}
+					return false;
+				};
+
+				UE.dom.domUtils.on($G('control_auto_field'), "change",
+						function() {
+							showModeByField(this.value);
+							if (this.value.substr(0, 8) === 'sys_list') {
+								$('#control_auto_hide').attr('disabled', true);
+							} else {
+								$('#control_auto_hide').removeAttr('disabled');
+							}
+						});
+				showModeByField($G('control_auto_field').value);
+				// 说明开关
+				var srcIns = {
+					$elem : $("#control_src_ins"),
+					show : function() {
+						this.$elem.slideDown(200).siblings().slideUp(200);
+					},
+					hide : function() {
+						this.$elem.slideUp(200).siblings().slideDown(200);
+					}
+				};
+
+				$("#ins_open").click(function() {
+					srcIns.show();
+				});
+				$("#ins_close").click(function() {
+					srcIns.hide();
+				});
+
+				// 测试
+				$("#src_test").on("click", function() {
+					var sql = $("#control_auto_src").val();
+					var field = $('#control_auto_field').val();
+					var dataValue = {};
+					dataValue.sql = sql;
+					if("sys_sql" == field){
+						dataValue.type = "input";
+					}else if("sys_list_sql" == field){
+						dataValue.type = "select";
+					}
+					$.ajax({
+						type : "post",
+						url : "/a/form/template/formsqltest",
+						data : dataValue,
+						dataType : "json",
+						success : function(response) {
+							alert(response.message);
+						},
+						error : function() {
+							alert("请检查网络，测试失败");
+						}
+					});
+				});
+			})();
+		</script>
+	</body>
+</html>

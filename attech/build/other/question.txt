@@ -1,0 +1,33 @@
+1.public List<Candidate> findAllList(){
+		return find("from Candidate where delFlag=:p1 ", new Parameter(Dict.DEL_FLAG_NORMAL));
+	}
+	为什么要加delFlag =:p1?
+2.//为什么要这句？menu.html p140
+	<input type="hidden" name="id" value="{{p.id}}">
+3.//为什么voteDao.clear()不能用？
+	@Transactional(readOnly = false)
+	public void saveVote(Vote vote) {
+		
+		//保存标题
+		System.out.println("--------votingContent2:----------" + vote.getVotingContent());
+		//voteDao.clear();
+		voteDao.save(vote);
+		UserUtils.removeCache(UserUtils.CACHE_VOTE);
+		//保存选项
+		List<String> list = vote.getCandidate();
+		for(String cd:list){
+			System.out.println("一次list");
+			Candidate candidate = new Candidate();
+			candidate.setCandidate(cd);
+			candidate.setVote(vote);
+			//candidateDao.clear();
+			candidateDao.save(candidate);
+		}
+		systemRealm.clearAllCachedAuthorizationInfo();
+		
+		UserUtils.removeCache(UserUtils.CACHE_CANDIDATE_LIST);
+		// 同步到Activiti
+		//saveActiviti(menu);
+	}
+4.<!-- 这句的作用？ -->
+					<input type="hidden" name="id" value="{{p.id}}">

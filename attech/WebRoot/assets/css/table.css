@@ -1,0 +1,104 @@
+.btn-sm{padding:3px 10px;}
+.table>thead>tr>th {padding: 5px;}
+.table>tbody>tr>td {padding: 6px;}
+footer{height:45px;}
+/*
+#search{float: left;display: none;width: 100%;border: 1px solid #e2e2e4;padding: 15px 0;margin-bottom: 20px;}
+*/
+#search{display:none;margin-top:2px;}
+#searchDIV{display:none;margin-top:2px;}
+.searchcontent{padding:10px 0;margin:0!important;}
+.inputdicts{width:33.3%;float:left;}
+.searchcontent{width:100%;float:left;}
+.serchcontent{padding:10px 0;}
+.phoneTable{float: left;width: 100%;}
+.phoneTableMain{float:left;list-style-type:none;padding:0;width:100%;}
+.phoneTableMain .messages-item{margin-bottom: 15px;border: 1px solid #ccc;}
+/*.phoneTableMain .messages-item:nth-child(1){border-top:0;}*/
+
+.phoneUl{list-style-type:none;padding:0;}
+.phoneline{min-height: 35px;border-bottom: 1px solid #eee;margin:0px;}
+.phoneline .col-xs-8{width:63%;}
+.phoneline .col-xs-9{width:70%;}
+.phoneline .phoneValue1{width:55%!important;font-size:14px;color:#5b5b60;border-left:1px solid #eee;padding:7px 7px 7px 10px!important;min-height:35px;}
+.phoneline .phoneValue2{width:64%!important;font-size:14px;color:#5b5b60;border-left:1px solid #eee;padding:7px 7px 7px 10px!important;min-height:35px;}
+.phoneTitle{line-height: 35px;padding:0px;margin-left: 10px;color:#5b5b60;font-size:14px;font-weight: bold;}
+.phoneValue{font-size:14px;color:#5b5b60;border-left:1px solid #eee;padding:7px 7px 7px 10px!important;min-height:35px;}
+
+.reponsiveTable{clear:both;}
+.btnTop{margin-top: 5px;position:absolute;right:10px;}
+.btnTop1{margin-top: 5px;position:absolute;right:10px;}
+.btnTop3{margin-top: 5px;position:absolute;right:20px;}
+.btnTop .ti-settings{font-size: 15px;line-height: 22px;}
+.btnTop1 .ti-settings{font-size:15px;line-height: 22px;}
+.btnTop3 .ti-settings{font-size: 15px;line-height: 22px;}
+.alert-warning {clear:both;margin-top:10px;}
+.pagination{margin:0px;padding:14px 0 9px;}
+.ng-table-counts{padding:14px 0 9px;}
+#noticeForm{margin-top:30px;}
+#smsForm{margin-top:30px;}
+
+/*
+   高级查询
+*/
+ @media (max-width:998px){
+ .minpeople{
+    min-width:80px!important;
+  }
+ }
+.searform{border: 1px solid #ddd;margin-top:5px;  margin-bottom: 5px;}
+.searform .row{margin:0px;}
+.formPadding{padding:5px 0!important;}
+.minpeople{
+  min-width:80px!important;
+  padding-left: 1px;
+  padding-right: 2px;
+  text-align:right;
+ }
+ 
+.formInfo .row .col-md-6{margin:2px 0;padding:0 5px;}
+.formInfo .row .col-md-9{padding:0px 2px;}
+#searchDIV .row .col-md-6{margin:2px 0;}
+#searchDIV .row .col-md-9{padding:0px 3px;}
+#search .row .col-md-6{margin:2px 0;}
+#search .row .col-md-9{padding:0px 2px;}
+.formBtn{min-width:161px;float: right;}
+.formBtn .searchmore{margin:0 5px;}
+.myphonediv{margin-top:5px;width:100%;float:left;}
+.phonedivLeft{width:30%;float:left;text-align: right;}
+.phonedivLeft label{margin-right:5px;margin-top:5px;}
+.phonedivRight{width:70%;float:left;}
+.phonedivRight label{margin-top:7px;}
+#serch{display:none;padding-bottom:10px;float: left;width:100%;}
+#serchDIV{display:none;padding-bottom:10px;float: left;width:100%;}
+@media only screen and (min-width: 992px) and (max-width: 1252px){
+	.searform .row .col-md-3 .formBtn{
+	    margin-top:29px;
+	}
+}
+.paddingIcon .labelSize{font-weight: 300;font-size:13px!important;color: #858585!important;white-space: normal;}
+.formborder .marTb .labelSize{word-break: break-all;white-space: normal;}
+ #sortable { list-style-type: none; margin: -5px; padding: 0; width: 100%; }
+.ui-state-default { margin: 3px 5px 5px 5px; padding:10px; font-size: 1.2em; background:#F0F3F4;border-radius: 4px;}
+.ui-state-default { word-wrap: break-word;height: auto; line-height: 1.2em; border:1px solid #C8C7CC ;border-radius: 4px; cursor:default}
+.ui-state-highlight { margin: 3px 5px 5px 5px; padding: 10px; font-size: 1.2em;  background:#F2FBFF;border-radius: 4px;}
+.ui-state-highlight { height: 2.5em;line-height: 1.2em; border:1px dashed  #B6BCBF;border-radius: 4px; }
+.flow_btn .btn-wide{padding: 6px 4px!important;min-width:86px;margin: 4px;}
+ 
+.showForm .row{margin-left: 0px!important;margin-right: 0px!important;}
+.showForm {background: #fff!important;margin-left: 0px!important;margin-right: 0px!important;}
+.showForm  .paddingIcon{padding-left:30px;padding-right:30px;}
+.showForm  .col-md-3{padding-left: 5px!important;padding-right: 5px!important;}
+.showForm  .col-md-7{padding-left: 0px!important;padding-right: 0px!important;}
+.showForm  .col-md-9{padding-left: 5px!important;padding-right: 5px!important;}
+.showForm .formComplete .row{padding:10px 30px;}
+.showForm .col-md-5.ng-binding{font-size:18px;color: #007AFF;magin-top:10px;margin-bottom: 10px;}
+.showForm .errorTop{margin-top:10px;}
+.showForm .radio-inline{margin-bottom:0px!important;}
+.showForm .checkbox-inline{margin-bottom:5px!important;}
+.showForm .page-marRight span{margin-right:2px;margin-top: 10px;}
+.formBuild_myForm .page-marRight span{margin-right:2px}
+.turnRight{background-image:url('../images/right.png');z-index:10000;top:35%;position: fixed;
+        width:15px;height:25px;right: 1px;margin-right:13px;}
+.turnLeft{background-image:url('../images/left.png');z-index:10000;top:35%;position: fixed;
+       width:15px;height:25px;left: 1px;margin-left:13px;} */

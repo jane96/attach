@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ueditor demo</title>
+</head>
+
+<body>
+    <!-- 加载编辑器的容器 -->
+    <script id="editor" name="content" type="text/plain">
+        这里写你的初始化内容
+    </script>
+	<script>
+			var G = {
+				STATIC_URL: ""
+			};
+		</script>
+    <!-- 配置文件 -->
+   <script src="editor_config.js?C9c"></script>
+	<script src="editor_all_min.js?C9c"></script>
+    <!-- 实例化编辑器 -->
+    <script type="text/javascript">
+    //实例化编辑器
+    var editor = new UE.ui.Editor();
+    editor.render("editor");
+</script>
+</body>
+
+</html>

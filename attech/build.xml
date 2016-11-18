@@ -1,0 +1,56 @@
+<project basedir="." default="antwar" name="anttest">
+	<target name="init" description="设置初始化打 war 包需要的路径变量">
+		<property name="name" value="anttest" />
+		<property name="src" value="${basedir}/src" />
+		<property name="lib" value="${basedir}/WebRoot/WEB-INF/lib" />
+		<property name="webapp" value="${basedir}/WebRoot" />
+
+		<property name="buildwar.dest" value="${basedir}/AntBuild" />
+		<property name="build.src" value="${basedir}/AntBuild/src" />
+		<property name="build.dest" value="${basedir}/AntBuild/WEB-INF/classes" />
+		<!-- 打包后war包的名字 -->
+		<property name="war.dir" value="${basedir}/attech.war" />
+		<path id="classpath">
+			<fileset dir="${lib}">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+	</target>
+
+	<target name="prepare" depends="init" description="创建打包需要的路径，拷贝源文件到打包路径下">
+		<mkdir dir="${build.src}" />
+		<mkdir dir="${build.dest}" />
+		<mkdir dir="${buildwar.dest}" />
+		<copy todir="${build.src}">
+			<fileset dir="${src}/main/java" />
+			<fileset dir="${src}/main/resources" />
+		</copy>
+
+		<copy todir="${buildwar.dest}">
+			<fileset dir="${webapp}">
+				<exclude name="${webapp}/WEB-INF/lib/*.jar" />
+			</fileset>
+
+		</copy>
+	</target>
+	<target name="build" depends="prepare" description="编译java文件，拷贝properties属性配置文件到编译后的路径下">
+		<javac srcdir="${build.src}" destdir="${build.dest}" encoding="UTF-8" includeantruntime="false" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="classpath" />
+		</javac>
+		<copy todir="${build.dest}">
+			<fileset dir="${build.src}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="antwar" depends="build" description="打war包，不将java文件打入包内">
+		<delete dir="${build.src}" />
+		<war warfile="${war.dir}" webxml="${buildwar.dest}/WEB-INF/web.xml">
+			<fileset dir="${buildwar.dest}">
+				<exclude name="${buildwar.dest}/WEB-INF/lib/**" />
+			</fileset>
+		</war>
+		<delete dir="${buildwar.dest}" />
+	</target>
+</project>
